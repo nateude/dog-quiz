@@ -153,17 +153,13 @@
             // User clicked on correct body part
             if ($('.error').length <= 0) {
                 $('.current-score').text(currentScore + 1);
-                $('.current-total').text(currentTotal + 1);
-                console.log('no error')
-            } else {
-                console.log('error')
             }
+            $('.current-total').text(currentTotal + 1);
             $("#message").text("Correct!").removeClass("incorrect");;
             $(".error").removeClass("error");
             displayRandomBodyPart(); // Display new random body part
         } else {
             // User clicked on incorrect body part
-            $('.current-total').text(currentTotal + 1);
             $("#message").text("Incorrect").addClass("incorrect");
             $("." + currentPart).addClass("error"); // Add error class to correct body part
         }
