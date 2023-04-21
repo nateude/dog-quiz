@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>4-h Dog Parts Quiz</title>
   <style>
-    /* CSS styles for highlight class */
+    /* CSS styles for error class */
     body {
         font-size: 18px;
     }
@@ -16,7 +16,7 @@
       stroke: green;
       stroke-width: 2; 
     }
-    .part.highlight {
+    .part.error {
       stroke: red;
       stroke-width: 2;
     }
@@ -28,6 +28,7 @@
     .text-box {
         display: block;
         height: 20px;
+        font-size: 32px;
     }
     .incorrect {
         color: red;
@@ -38,13 +39,30 @@
         stroke-width:3;
         stroke-miterlimit:10;
     }
+    .body-part {
+    }
+    #output {
+        text-transform: capitalize;
+        font-weight: bold;
+    }
+    .score span {
+        font-family: monospace;
+    }
   </style>
 </head>
 <body>
     <div class="container">
         <h1>4-h Dog Parts Quiz</h1>
-        <p class="text-box" id="output"></p>
-        <p class="text-box" id="message"></p>
+        <p class="text-box score">
+            <span class="current-score">0</span>
+            of
+            <span class="current-total">0</span>
+        </p>
+        <p class="text-box body-part">
+            Please select the:
+            <span id="output"></span>
+        </p>
+        <p class="text-box message" id="message"></p>
     </div>
     <div class="container">
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 323.74" style="enable-background:new 0 0 500 323.74;" xml:space="preserve">
@@ -112,12 +130,12 @@
     function displayRandomBodyPart() {
       if (shuffledBodyParts.length === 0) {
         // All body parts have been shown
-        $("#message").text("You have completed the quiz!");
-        $("#output").text("")
+        $(".body-part").text("You have completed the quiz!");
+        $("#message").text("Refresh the page to try again.")
       } else {
         // Display the new random body part
         var randomPart = shuffledBodyParts.pop();
-        $("#output").text("Please select the: " + randomPart);
+        $("#output").text(randomPart);
       }
     }
 
@@ -127,17 +145,27 @@
     // Click event for SVG elements with IDs representing body parts
     $("svg circle").click(function() {
         var clickedPart = $(this).attr("class"); // Get the class of the clicked body part
-        var currentPart = $("#output").text().replace("Please select the: ", "");
-        
+        var currentPart = $("#output").text();
+        var currentScore = parseInt($('.current-score').text());
+        var currentTotal = parseInt($('.current-total').text());
+
         if (clickedPart.split(" ").includes(currentPart)) {
             // User clicked on correct body part
+            if ($('.error').length <= 0) {
+                $('.current-score').text(currentScore + 1);
+                $('.current-total').text(currentTotal + 1);
+                console.log('no error')
+            } else {
+                console.log('error')
+            }
             $("#message").text("Correct!").removeClass("incorrect");;
-            $(".highlight").removeClass("highlight");
+            $(".error").removeClass("error");
             displayRandomBodyPart(); // Display new random body part
         } else {
             // User clicked on incorrect body part
+            $('.current-total').text(currentTotal + 1);
             $("#message").text("Incorrect").addClass("incorrect");
-            $("." + currentPart).addClass("highlight"); // Add highlight class to correct body part
+            $("." + currentPart).addClass("error"); // Add error class to correct body part
         }
     });
   </script>
